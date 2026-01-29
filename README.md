@@ -4,7 +4,7 @@ DADS 7305 - Machine Learning Operations (MLOps) | Lab 1
 
 A FastAPI app that classifies wines into 3 classes based on 13 chemical features. Uses a neural network (MLPClassifier) trained on sklearn's Wine dataset.
 
-## Project Structure
+## Folder Structure
 
 ```
 ├── model/
@@ -30,7 +30,7 @@ pip install -r requirements.txt
 
 ## Run
 
-Train the model:
+train the model:
 ```bash
 cd src
 python train.py
