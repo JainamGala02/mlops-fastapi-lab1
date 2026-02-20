@@ -2,7 +2,7 @@
 
 DADS 7305 - Machine Learning Operations (MLOps) | Lab 1
 
-A FastAPI app that classifies wines into 3 classes based on 13 chemical features. Uses a neural network (MLPClassifier) trained on sklearn's Wine dataset.
+> **Note:** The original lab uses the Iris dataset with a Decision Tree Classifier. For my implementation, I've swapped in sklearn's Wine dataset (3 classes, 13 chemical features) and replaced the Decision Tree with an MLPClassifier (neural network). The FastAPI serving structure and API patterns remain the same - refer to the [original lab README](https://www.mlwithramin.com/blog/fastapi-lab1) for foundational concepts.
 
 ## Folder Structure
 
@@ -20,51 +20,77 @@ A FastAPI app that classifies wines into 3 classes based on 13 chemical features
 └── .gitignore
 ```
 
-## Setup
+## Setup & Run
+
+**1. Clone the repo and navigate to the project directory:**
+
+```bash
+git clone <repo-url>
+cd fastapi_lab1
+```
+
+**2. Create and activate a virtual environment:**
 
 ```bash
 python -m venv mlops-fastapi-env
-mlops-fastapi-env\Scripts\activate  # Windows
+```
+
+- Windows: `mlops-fastapi-env\Scripts\activate`
+- macOS/Linux: `source mlops-fastapi-env/bin/activate`
+
+**3. Install dependencies:**
+
+```bash
 pip install -r requirements.txt
 ```
 
-## Run
+This installs `fastapi[all]` (which includes `uvicorn`), `scikit-learn`, and `joblib`.
 
-train the model:
+**4. Train the model:**
+
 ```bash
 cd src
 python train.py
 ```
 
-Start the API:
+This trains an MLPClassifier on the Wine dataset and saves `wine_model.pkl` and `scaler.pkl` to the `model/` directory. You should see training accuracy printed to the console.
+
+**5. Start the API server:**
+
 ```bash
 uvicorn main:app --reload
 ```
 
-Open http://127.0.0.1:8000/docs to test.
+Run this from inside the `src/` folder. The `--reload` flag enables hot-reloading during development - the server restarts automatically when you edit code.
 
-## Example Request
+**6. Test the API:**
 
-POST `/predict`
-```json
-{
-  "alcohol": 14.23,
-  "malic_acid": 1.71,
-  "ash": 2.43,
-  "alcalinity_of_ash": 15.6,
-  "magnesium": 127,
-  "total_phenols": 2.8,
-  "flavanoids": 3.06,
-  "nonflavanoid_phenols": 0.28,
-  "proanthocyanins": 2.29,
-  "color_intensity": 5.64,
-  "hue": 1.04,
-  "od280_od315_of_diluted_wines": 3.92,
-  "proline": 1065
-}
+- Open http://127.0.0.1:8000/docs in your browser to access the Swagger UI.
+- Click on the `POST /predict` endpoint → **Try it out** → paste the example JSON below → **Execute**.
+- Alternatively, use `curl` from a separate terminal:
+
+```bash
+curl -X POST http://127.0.0.1:8000/predict \
+  -H "Content-Type: application/json" \
+  -d '{
+    "alcohol": 14.23,
+    "malic_acid": 1.71,
+    "ash": 2.43,
+    "alcalinity_of_ash": 15.6,
+    "magnesium": 127,
+    "total_phenols": 2.8,
+    "flavanoids": 3.06,
+    "nonflavanoid_phenols": 0.28,
+    "proanthocyanins": 2.29,
+    "color_intensity": 5.64,
+    "hue": 1.04,
+    "od280_od315_of_diluted_wines": 3.92,
+    "proline": 1065
+  }'
 ```
 
-Response:
+## Expected Response
+
 ```json
 {
   "response": 0
